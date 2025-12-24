@@ -41,7 +41,7 @@ function Welcome({nextStep}:propType) {
          initial={{opacity:0, scale:0.9}}
         animate={{opacity:1, scale:1}}
         transition={{duration:0.6, delay:0.5}}
-        className='inline-flex items-center gap-2 mt-8 bg-black text-white font-semibold hover:bg-gray-700 py-3 px-8 rounded-2xl shadow-md'
+        className='inline-flex items-center gap-2 mt-8 bg-black text-white font-semibold hover:bg-gray-700 py-3 px-8 rounded-2xl shadow-md cursor-pointer'
         onClick={()=>nextStep(2)}
         >
             Get started <ArrowRight/>
