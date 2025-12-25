@@ -97,7 +97,7 @@ function Login() {
                 <span className='flex-1 h-px bg-gray-400'></span>
             </div>
             
-            <button className='w-full flex items-center justify-center gap-3 py-3 rounded-xl font-medium border border-black hover:bg-gray-200 cursor-pointer'>
+            <button className='w-full flex items-center justify-center gap-3 py-3 rounded-xl font-medium border border-black hover:bg-gray-200 cursor-pointer' onClick={()=>signIn("google")}>
                 <Image alt='' src={googleImage} width={20} height={20}/>
                 Continue with Google
             </button>
