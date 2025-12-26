@@ -6,7 +6,7 @@ interface IUser{
     email:string,
     password?:string,
     mobile?:string,
-    role:"user" | "deliveryBoy" | "admin"
+    role:"user" | "deliveryboy" | "admin"
     image?:string
 
 }
