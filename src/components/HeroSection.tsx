@@ -97,7 +97,7 @@ function HeroSection() {
             {slides.map((_, index) => (
               <div
                 key={index}
-                className={`w-3 h-3 rounded-full cursor-pointer ${index === currentSlide ? 'bg-black' : 'bg-gray-300'}`}
+                className={`w-3 h-3 rounded-full cursor-pointer transition-all ${index === currentSlide ? 'bg-black' : 'bg-gray-300'}`}
                 onClick={() => setCurrentSlide(index)}
               ></div>
             ))}
