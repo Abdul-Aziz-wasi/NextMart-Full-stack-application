@@ -1,6 +1,9 @@
 import { auth } from '@/auth'
+import AdminDashboard from '@/components/AdminDashboard'
+import DeliveryboyDashboard from '@/components/DeliveryboyDashboard'
 import EditRoleMobile from '@/components/EditRoleMobile'
 import Navbar from '@/components/Navbar'
+import UserDashboard from '@/components/UserDashboard'
 import dbConnect from '@/lib/db'
 import User from '@/models/user.model'
 import { redirect } from 'next/navigation'
@@ -25,6 +28,8 @@ async function Page() {
   return (
     <>
       <Navbar user={plainUser}></Navbar>
+
+      {user.role =="user" ? (<UserDashboard/>): user.role =="admin" ? (<AdminDashboard/>): <DeliveryboyDashboard/>}
     </>
   )
 }
