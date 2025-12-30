@@ -2,7 +2,9 @@
 import axios from "axios"
 import { Bike, User, UserCog } from "lucide-react"
 import { motion } from "motion/react"
-import { redirect } from "next/navigation"
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+
 import { useState } from "react"
 function EditRoleMobile() {
 
@@ -14,6 +16,8 @@ function EditRoleMobile() {
 
     const [selectedRole, setSelectedRole]=useState("")
     const [mobile,setMobile]=useState("")
+    const{update}=useSession()
+    const router =useRouter()
 
    const handleRoleMobile =async()=>{
         try {
@@ -21,7 +25,8 @@ function EditRoleMobile() {
                 role:selectedRole,
                 mobile
             })
-            redirect("/")
+            await update({role:selectedRole})
+            router.push("/")
             
         } catch (error) {
             console.log(error)

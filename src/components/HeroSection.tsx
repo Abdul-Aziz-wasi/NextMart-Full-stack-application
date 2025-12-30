@@ -49,7 +49,7 @@ function HeroSection() {
 
   return (
     <div className="w-[90%] mx-auto mt-32 min-h-[60vh] bg-white rounded-3xl shadow-2xl overflow-hidden">
-      <div className="grid grid-cols-1 md:grid-cols-2 items-center h-full p-8 md:p-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 items-center h-full gap-2 p-8 md:p-16">
         
         {/* LEFT CONTENT */}
         <AnimatePresence mode="wait">
