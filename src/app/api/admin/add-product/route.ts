@@ -20,12 +20,11 @@ export async function POST(req: NextRequest) {
         const category = formData.get("category") as string;
         const price =formData.get("price") as string;
         const unit = formData.get("unit") as string;
-        const stock = formData.get("stock") as string;
-        const imageFile = formData.get("image") as Blob | null;
+        const file = formData.get("image") as Blob | null;
 
         let imageUrl
-        if(imageFile){
-            imageUrl = await upLoadImageOnCloudinary(imageFile)
+        if(file){
+            imageUrl = await upLoadImageOnCloudinary(file)
         }
 
         const productData = await Product.create(
@@ -34,8 +33,7 @@ export async function POST(req: NextRequest) {
             category,
             price,
             unit,
-            stock,
-            image:imageUrl
+            imageUrl
         }) 
         return NextResponse.json(
              productData,
@@ -45,7 +43,7 @@ export async function POST(req: NextRequest) {
 
     } catch (error) {
         return NextResponse.json(
-            {message:"Failed to add product", error},
+            {message:`Error adding product: ${error}`},
              {status:500}
            )
     }

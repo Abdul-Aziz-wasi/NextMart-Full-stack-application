@@ -7,7 +7,6 @@ interface IProduct {
   category: string;
   imageUrl: string;
   unit: string;
-  stock: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -23,19 +22,18 @@ const productSchema = new mongoose.Schema<IProduct>({
 
     category: {
         type: String,
-        enum: ["fruits", "vegetables", "dairy", "bakery", "beverages", "snacks", "household", "personal_care","skincare","beauty", "others"],
+        enum: ["fruits", "vegetables", "dairy", "bakery", "beverages", "snacks", "household", "personal_care","skincare","beauty", "others","Electronics","Fashion","Home & Kitchen","Books","Sports","Toys","Beauty & Personal Care","Automotive","Grocery","Health"],
         required: true},
 
     imageUrl: {
         type: String,
         required: true},
+        
     unit: {
         type: String,
-        required: true},
-    stock: {
-        type: Number,
         required: true,
-        default: 0}
+        enum: ["kg", "g", "litre", "ml", "piece", "pack"]
+    }
 
 
 },{timestamps:true});
