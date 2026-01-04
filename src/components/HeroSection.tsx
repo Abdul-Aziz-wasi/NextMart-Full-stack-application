@@ -13,8 +13,7 @@ function HeroSection() {
       icon: <Leaf className="w-16 h-16" />,
       subtitle: "Fresh and organic products just for you",
       btnText: "Shop Now",
-      image:
-        "https://plus.unsplash.com/premium_photo-1683887064255-1c428d0b3934?w=800",
+      image:"https://plus.unsplash.com/premium_photo-1683887064255-1c428d0b3934?w=800",
     },
     {
       id: 2,
@@ -22,8 +21,7 @@ function HeroSection() {
       icon: <Bike className="w-16 h-16" />,
       subtitle: "Get your daily dose with fast delivery",
       btnText: "Order Now",
-      image:
-        "https://images.unsplash.com/photo-1690625642622-ba0bed1a68a0?w=800",
+      image:"https://images.unsplash.com/photo-1690625642622-ba0bed1a68a0?w=800",
     },
     {
       id: 3,
@@ -31,8 +29,7 @@ function HeroSection() {
       icon: <Smartphone className="w-16 h-16" />,
       subtitle: "Easy and seamless shopping experience",
       btnText: "Explore More",
-      image:
-        "https://plus.unsplash.com/premium_photo-1661774910035-05257f7d73a6?w=800",
+      image:"https://plus.unsplash.com/premium_photo-1661774910035-05257f7d73a6?w=800",
     },
   ];
 
@@ -41,7 +38,7 @@ function HeroSection() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 4000);
+    }, 5000);
     return () => clearInterval(timer);
   }, []);
 
@@ -49,10 +46,31 @@ function HeroSection() {
 
   return (
     <div className="w-[90%] mx-auto mt-32 min-h-[60vh] bg-white rounded-3xl shadow-2xl overflow-hidden">
-      <div className="grid grid-cols-1 md:grid-cols-2 items-center h-full gap-2 p-8 md:p-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 items-center h-full gap-8 p-8 md:p-16">
         
         {/* LEFT CONTENT */}
+       
         <AnimatePresence mode="wait">
+          <motion.div
+            key={slide.image}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6 }}
+            className="relative w-full h-75 md:h-100"
+          >
+            <Image
+              src={slide.image}
+              alt="Hero image"
+              fill
+              className="object-cover rounded-2xl"
+              priority
+            />
+          </motion.div>
+        </AnimatePresence>
+
+        {/* RIGHT IMAGE */}
+         <AnimatePresence mode="wait">
           <motion.div
             key={slide.id}
             initial={{ opacity: 0, x: -40 }}
@@ -69,26 +87,6 @@ function HeroSection() {
             <button className="px-6 py-3 bg-black text-white rounded-xl hover:bg-gray-800 transition">
               {slide.btnText}
             </button>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* RIGHT IMAGE */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={slide.image}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.6 }}
-            className="relative w-full h-[300px] md:h-[400px]"
-          >
-            <Image
-              src={slide.image}
-              alt="Hero image"
-              fill
-              className="object-cover rounded-2xl"
-              priority
-            />
           </motion.div>
         </AnimatePresence>
          </div>
