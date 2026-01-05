@@ -1,4 +1,5 @@
 "use client"
+import { RootState } from '@/redux/store'
 import { Boxes, ClipboardCheck, LogOut, Menu, Package, PlusCircle, Search, ShoppingCart, User, X } from 'lucide-react'
 import mongoose from 'mongoose'
 import { AnimatePresence,motion } from 'motion/react'
@@ -7,6 +8,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import { useSelector } from 'react-redux'
 
 interface IUser{
     _id?:mongoose.Types.ObjectId,
@@ -25,6 +27,7 @@ function Navbar({user}:{user:IUser}) {
   const profileDropdown=useRef<HTMLDivElement>(null)
   const [searchOpern, setSearchOpen]=useState(false)
   const [menuOpen, setMenuOpen]=useState(false)
+  const {cartData}=useSelector((state:RootState)=>state.cart)
 
   useEffect(()=>{
     const handleClickOutside=(event:MouseEvent)=>{
@@ -105,7 +108,7 @@ function Navbar({user}:{user:IUser}) {
 
               <Link href={"/cart"} className='bg-white relative rounded-full w-11 h-11 flex items-center justify-center shadow-md hover:scale-105 transition-transform'>
           <ShoppingCart className='w-6 h-6'/>
-          <span className='absolute -top-1 -right-1 bg-white text-xs h-5 w-5 flex items-center justify-center rounded-full font-semibold shadow'>0</span>
+          <span className='absolute -top-1 -right-1 bg-white text-xs h-5 w-5 flex items-center justify-center rounded-full font-semibold shadow'>{cartData.length}</span>
           </Link>
 
           </>}
