@@ -106,7 +106,7 @@ function Navbar({user}:{user:IUser}) {
             <Search className='w-6 h-6'/>
              </div>
 
-              <Link href={"/cart"} className='bg-white relative rounded-full w-11 h-11 flex items-center justify-center shadow-md hover:scale-105 transition-transform'>
+              <Link href={"/user/cart"} className='bg-white relative rounded-full w-11 h-11 flex items-center justify-center shadow-md hover:scale-105 transition-transform'>
           <ShoppingCart className='w-6 h-6'/>
           <span className='absolute -top-1 -right-1 bg-white text-xs h-5 w-5 flex items-center justify-center rounded-full font-semibold shadow'>{cartData.length}</span>
           </Link>
