@@ -5,12 +5,14 @@ import { ArrowLeft, Minus, Plus, ShoppingBasket, Trash2 } from 'lucide-react'
 import {AnimatePresence, motion} from "motion/react"
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 function CartPage() {
     const {cartData,subTotal,deliveryFee,finalTotal}= useSelector((state:RootState)=>state.cart)
     const dispatch =useDispatch<AppDispatch>()
+    const router =useRouter()
   return (
     <div className='w-[95%] sm:w-[90%] md:w-[80%] mx-auto mt-8 mb-24 relative'>
         <Link href={"/"} className='absolute -top-2 left-0 flex itmes-center gap-2 font-medium hover:text-gray-800'>
@@ -135,6 +137,7 @@ function CartPage() {
       <motion.button
       whileTap={{scale:0.95}}
       className='w-full mt-6 bg-black text-white py-3 rounded-full font-semibold text-sm sm:text-base'
+      onClick={()=>router.push("/user/checkout")}
       >Proceed to Checkout</motion.button>
       
   </motion.div>
