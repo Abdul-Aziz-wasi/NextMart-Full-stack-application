@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import {motion} from "motion/react"
-import { ArrowLeft, Building, Home, Loader2, LocateFixed, MapPin, Navigation, Phone, Search, User } from 'lucide-react'
+import { ArrowLeft, Building, CreditCard, Home, Loader2, LocateFixed, MapPin, Navigation, Phone, Search, Truck, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
@@ -16,9 +16,11 @@ const markerIcon =new L.Icon({
     iconSize:[40,40],
     iconAnchor:[20,40]
 })
+
 function Checkout() {
     const router =useRouter()
     const {userData}=useSelector((state:RootState)=>state.user)
+    const {subTotal,deliveryFee,finalTotal}=useSelector((state:RootState)=>state.cart)
     const [address, setAddress]= useState({
         fullName: "",
         mobile:"",
@@ -33,6 +35,7 @@ function Checkout() {
     const [positions, setPositions] =useState<[number,number] | null>(null)
     const[serachQuery, setSearchQuery]=useState("")
     const [searchLoading, setSearchLoading]=useState(false)
+    const [paymentMethod, setPaymentMethod] =useState<"cod" | "online">("cod")
 
     const handleSearchQuery =async()=>{
         setSearchLoading(true)
@@ -125,10 +128,11 @@ function Checkout() {
          className='text-3xl md:text-4xl font-bold text-center mb-10'>Checkout</motion.h1>
 
          <div className='grid md:grid-cols-2 gap-8'> 
+            {/* Left content*/}
             <motion.div
             initial={{opacity:0, x:-20}}
-        animate={{opacity:1, x:0}}
-        transition={{duration:0.5}}
+            animate={{opacity:1, x:0}}
+            transition={{duration:0.5}}
             className='bg-white rounded-2xl shadow-lg hover:shadow-xl p-6 '
             >
                 <h2 className='text-xl font-semibold mb-4 text-gray-800 flex items-center gap-2'> <MapPin/> Delivery Address</h2>
@@ -193,6 +197,52 @@ function Checkout() {
                     </div>
 
                 </div>
+
+            </motion.div>
+
+            {/* Right Content*/}
+            <motion.div
+            initial={{opacity:0, x:20}}
+            animate={{opacity:1, x:0}}
+            transition={{duration:0.5}}
+            className='bg-white rounded-2xl shadow-lg hover:shadow-xl p-6 h-fit'
+            >
+                <h2 className='text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2'><CreditCard /> Payment Method</h2>
+                <div className='space-y-4 mb-6'>
+                    <button
+                    onClick={()=>setPaymentMethod("online")}
+                    className={`flex items-center gap-3 w-full border rounded-lg p-3 ${paymentMethod === "online" ? "bg-black text-white shadow-sm" : "hover:bg-gray-50"}`}
+                    ><CreditCard/> <span className='font-medium'>Pay Online (stripe)</span></button>
+
+                    <button
+                    onClick={()=>setPaymentMethod("cod")}
+                    className={`flex items-center gap-3 w-full border rounded-lg p-3 ${paymentMethod === "cod" ? "bg-black text-white shadow-sm" : "hover:bg-gray-50"}`}
+                    ><Truck/> <span className='font-medium'>Cash on Delivery</span></button>
+                </div>
+
+                <div className='border-t pt-4 font-semibold space-y-2 text-sm sm:text-base'>
+                    <div className='flex justify-between'>
+                        <span>Sub Total</span>
+                        <span>{subTotal} tk</span>
+                    </div>
+
+                    <div className='flex justify-between'>
+                        <span>Delivery Fee</span>
+                        <span>{deliveryFee} tk</span>
+                    </div>
+
+                    <div  className='flex justify-between border-t '>
+                        <span>Final Total</span>
+                        <span>{finalTotal} tk</span>
+                    </div>
+                </div>
+
+                <motion.button
+                whileTap={{scale:0.95}}
+                className='w-full mt-6 text-white py-3 bg-black rounded-full font-semibold'
+                >
+                    {paymentMethod ==="cod" ? "Place Order" : "Pay and Place Order"}
+                </motion.button>
 
             </motion.div>
          </div>
