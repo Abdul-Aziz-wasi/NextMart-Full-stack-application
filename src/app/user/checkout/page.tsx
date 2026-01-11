@@ -20,7 +20,7 @@ const markerIcon =new L.Icon({
 function Checkout() {
     const router =useRouter()
     const {userData}=useSelector((state:RootState)=>state.user)
-    const {subTotal,deliveryFee,finalTotal}=useSelector((state:RootState)=>state.cart)
+    const {subTotal,deliveryFee,finalTotal, cartData}=useSelector((state:RootState)=>state.cart)
     const [address, setAddress]= useState({
         fullName: "",
         mobile:"",
@@ -52,7 +52,7 @@ function Checkout() {
              navigator.geolocation.getCurrentPosition((position=>{
                 const {latitude, longitude}= position.coords
                 setPositions([latitude,longitude])
-             }),(error)=>{console.log('location error', error)},{enableHighAccuracy:true, maximumAge:0, timeout:600000})
+             }),(error)=>{console.log('location error', error)},{enableHighAccuracy:true, maximumAge:0, timeout:10000})
         }
     },[])
 
@@ -101,6 +101,78 @@ function Checkout() {
                                     }
                                  }}
                                  />
+    }
+
+    const handleCodOrder=async()=>{
+        if(!positions){
+            return null
+        }
+        try {
+            const result = await axios.post("/api/user/order",{
+                userId:userData?._id,
+                items:cartData.map(item=>(
+                    {
+                        grocery:item._id,
+                        name:item.name,
+                        price:item.price,
+                        unit:item.unit,
+                        quantity:item.quantity,
+                        image:item.imageUrl
+                    }
+                )),
+                totalAmount :finalTotal,
+                address:{
+                    fullName:address.fullName,
+                    mobile:address.mobile,
+                    city:address.city,
+                    division:address.division,
+                    pinCode:address.pinCode,
+                    fullAddress:address.fullAddress,
+                    latitude:positions[0],
+                    longitude:positions[1]
+                },
+                paymentMethod,
+            })
+            router.push("/user/order-successful")
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleOnlinePayment=async()=>{
+        if(!positions){
+            return null
+        }
+        try {
+            const result =await axios.post("/api/user/payment",{
+                userId:userData?._id,
+                items:cartData.map(item=>(
+                    {
+                        grocery:item._id,
+                        name:item.name,
+                        price:item.price,
+                        unit:item.unit,
+                        quantity:item.quantity,
+                        image:item.imageUrl
+                    }
+                )),
+                totalAmount :finalTotal,
+                address:{
+                    fullName:address.fullName,
+                    mobile:address.mobile,
+                    city:address.city,
+                    division:address.division,
+                    pinCode:address.pinCode,
+                    fullAddress:address.fullAddress,
+                    latitude:positions[0],
+                    longitude:positions[1]
+                },
+                paymentMethod,
+            })
+            window.location.href=result.data.url
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const handleCurrentLocation =()=>{
@@ -240,6 +312,14 @@ function Checkout() {
                 <motion.button
                 whileTap={{scale:0.95}}
                 className='w-full mt-6 text-white py-3 bg-black rounded-full font-semibold'
+                onClick={()=>{
+                    if(paymentMethod === "cod"){
+                        handleCodOrder()
+                    }else{
+                        handleOnlinePayment()
+                        
+                    }
+                }}
                 >
                     {paymentMethod ==="cod" ? "Place Order" : "Pay and Place Order"}
                 </motion.button>
