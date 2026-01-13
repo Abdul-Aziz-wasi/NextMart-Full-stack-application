@@ -159,7 +159,7 @@ function Navbar({user}:{user:IUser}) {
                   </div>
                 </div>
 
-                {user.role==="user" && <Link href={""} onClick={()=>setOpen(false)} className='flex items-center gap-2 py-3 px-3 hover:bg-amber-200 rounded-lg font-medium'>
+                {user.role==="user" && <Link href={"/user/my-orders"} onClick={()=>setOpen(false)} className='flex items-center gap-2 py-3 px-3 hover:bg-amber-200 rounded-lg font-medium'>
                 <Package className='w-5 h-5'/>
                 My Orders
                 </Link>}

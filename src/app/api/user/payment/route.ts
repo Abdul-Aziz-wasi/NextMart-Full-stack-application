@@ -30,7 +30,8 @@ export async function POST(req:NextRequest) {
             items,
             paymentMethod,
             totalAmount,
-            address
+            address,
+            isPaid: paymentMethod === "cod" ? false : true
         })
 
         const session =await stripe.checkout.sessions.create({
