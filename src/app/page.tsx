@@ -1,7 +1,8 @@
 import { auth } from '@/auth'
 import AdminDashboard from '@/components/AdminDashboard'
-import DeliveryboyDashboard from '@/components/DeliveryboyDashboard'
+import DeliveryBoy from '@/components/DeliveryBoy'
 import EditRoleMobile from '@/components/EditRoleMobile'
+import GeoUpdater from '@/components/GeoUpdater'
 import Navbar from '@/components/Navbar'
 import UserDashboard from '@/components/UserDashboard'
 import dbConnect from '@/lib/db'
@@ -28,8 +29,9 @@ async function Page() {
   return (
     <>
       <Navbar user={plainUser}></Navbar>
+      <GeoUpdater userId={plainUser._id}/>
 
-      {user.role =="user" ? (<UserDashboard/>): user.role =="admin" ? (<AdminDashboard/>): <DeliveryboyDashboard/>}
+      {user.role =="user" ? (<UserDashboard/>): user.role =="admin" ? (<AdminDashboard/>): <DeliveryBoy/>}
     </>
   )
 }

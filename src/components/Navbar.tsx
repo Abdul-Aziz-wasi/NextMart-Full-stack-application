@@ -121,7 +121,7 @@ function Navbar({user}:{user:IUser}) {
 
               <Link href={""} className='flex items-center gap-2 bg-white font-semibold px-4 py-2 rounded-full hover:bg-amber-200'><Boxes className='h-5 w-5'/>View Products</Link>
 
-              <Link href={""} className='flex items-center gap-2 bg-white font-semibold px-4 py-2 rounded-full hover:bg-amber-200'><ClipboardCheck className='h-5 w-5'/>Manage Orders</Link>
+              <Link href={"/admin/manage-orders"} className='flex items-center gap-2 bg-white font-semibold px-4 py-2 rounded-full hover:bg-amber-200'><ClipboardCheck className='h-5 w-5'/>Manage Orders</Link>
             </div>
 
               {/* Mobile Menu Icon */}

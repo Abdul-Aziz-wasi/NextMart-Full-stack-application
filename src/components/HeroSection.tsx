@@ -5,7 +5,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
+
 function HeroSection() {
+
   const slides = [
     {
       id: 1,

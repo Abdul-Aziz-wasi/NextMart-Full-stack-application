@@ -4,11 +4,8 @@ import { motion } from "motion/react"
 import Image from 'next/image'
 import googleImage from '@/assets/googleicon.png'
 import React, { FormEvent, useState } from 'react'
-import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { signIn, useSession } from 'next-auth/react'
-
-
 
 
 function Login() {
