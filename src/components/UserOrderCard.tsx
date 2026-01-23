@@ -1,12 +1,51 @@
 "use client"
-import { IOrder } from '@/models/order.model'
-import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Truck } from 'lucide-react'
+import { getSocket } from '@/lib/socket'
+import { IUser } from '@/models/user.model'
+import { Bike, ChevronDown, ChevronUp, CreditCard, MapPin, Package, Truck, UserCheck } from 'lucide-react'
+import mongoose from 'mongoose'
 import {motion} from "motion/react"
 import Image from 'next/image'
-import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
+
+export interface IOrder{
+    _id?:mongoose.Types.ObjectId
+    user:mongoose.Types.ObjectId
+    items:[
+        {
+            grocery:mongoose.Types.ObjectId
+            name:string
+            price:string
+            image:string
+            unit:string
+            quantity:number
+        }
+    ]
+    isPaid:boolean
+    totalAmount:number
+    paymentMethod:"cod" | "online"
+    address:{
+        fullName:string
+        mobile:string
+        city:string
+        state:string
+        division:string
+        pinCode:string
+        fullAddress:string
+        latitude:number
+        longitude:number
+    }
+    assignment?:mongoose.Types.ObjectId
+    assignedDeliveryBoy:IUser
+    status:"pending" | "out of delivery" | "delivered"
+    createdAt:Date
+    updatedAt:Date
+}
 
 function UserOrderCard({order}:{order:IOrder}) {
     const [expanded, setExpanded]=useState(false)
+    const [status,setStatus]=useState(order.status)
+    const router =useRouter()
 
     const getStatusColor=(status:string)=>{
         switch (status) {
@@ -22,6 +61,16 @@ function UserOrderCard({order}:{order:IOrder}) {
                 break;
         }
     }
+
+    useEffect(():any=>{
+        const socket =getSocket()
+        socket.on("order-status-update",(data)=>{
+            if(data.orderId.toString() ==order._id?.toString()){
+                setStatus(data.status)
+            }
+        })
+        return ()=>socket.off("order-status-update")
+    },[])
   return (
     <motion.div 
     initial={{opacity:0, y:15}}
@@ -41,12 +90,14 @@ function UserOrderCard({order}:{order:IOrder}) {
                     :"bg-red-100 text-red-700 border-red-300"}`}>{order.isPaid?"paid":"unpaid"}</span>
 
                     <span className={`px-3 py-1 text-xs font-semibold rounded-full border 
-                    ${getStatusColor(order.status)}`}>
-                        {order.status}
+                    ${getStatusColor(status)}`}>
+                        {status}
                     </span>
 
             </div>
         </div>
+
+          
 
         <div className='p-5 space-y-4'>
             {order.paymentMethod == "cod"?   <div className='flex items-center gap-2 text-sm'>
@@ -56,6 +107,22 @@ function UserOrderCard({order}:{order:IOrder}) {
                 <CreditCard size={16}/>
                 Online payment
                 </div>}
+
+                {order.assignedDeliveryBoy && <>
+           <div className='mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-between'>
+                <div className='flex items-center gap-3 text-sm text-gray-700'>
+                <UserCheck className='text-blue-600' size={18}/>
+                <div className='font-semibold'>
+                <p>Assigned to: <span>{order.assignedDeliveryBoy.name}</span></p>
+                <p className='text-xs text-gray-600'>📞 {order.assignedDeliveryBoy.mobile}</p>
+                </div>
+                </div>
+                <a className='bg-black text-white text-xs px-3 py-2 rounded-lg ' href={`tel:${order.assignedDeliveryBoy.mobile}`}>Call</a>
+            </div>
+            <button onClick={()=>router.push(`/user/track-order/${order._id?.toString()}`)} className='w-full flex items-center justify-center gap-2 bg-black text-white font-semibold px-4 py-2 rounded-xl shadow'><Bike size={18}/>Track your order</button>
+            </>}
+
+            
 
                 <div className='flex items-center gap-2 text-sm'>
                     <MapPin size={16}/>
@@ -105,7 +172,7 @@ function UserOrderCard({order}:{order:IOrder}) {
            <div className='border-t pt-3 flex justify-between items-center font-semibold text-sm border-gray-300'>
                     <div className='flex items-center gap-2 text-sm'>
                     <Truck size={16}/>
-                    <span>Delivery: <span className='text-green-700'>{order.status}</span></span>
+                    <span>Delivery: <span className='text-green-700'>{status}</span></span>
                     </div>
                     <div>
                        <span className='font-bold'>Total: {order.totalAmount}tk</span> 

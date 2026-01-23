@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Order from "./order.model";
 import User from "./user.model";
 
-interface IDeliveryAssignment{
+export interface IDeliveryAssignment{
     _id?:mongoose.Types.ObjectId
     order:mongoose.Types.ObjectId
     broadCastedTo:mongoose.Types.ObjectId[]

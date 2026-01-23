@@ -69,7 +69,7 @@ function Navbar({user}:{user:IUser}) {
 
               <Link href={""} className='flex items-center gap-3 p-3 rounded-lg bg-white hover:bg-amber-200'><Boxes className='h-5 w-5'/>View Products</Link>
 
-              <Link href={""} className='flex items-center gap-3 p-3 rounded-lg bg-white hover:bg-amber-200'><ClipboardCheck className='h-5 w-5'/>Manage Orders</Link>
+              <Link href={"/admin/manage-orders"} className='flex items-center gap-3 p-3 rounded-lg bg-white hover:bg-amber-200'><ClipboardCheck className='h-5 w-5'/>Manage Orders</Link>
         </div>
 
         <div className='my-5 border-t'></div>

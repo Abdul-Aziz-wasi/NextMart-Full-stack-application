@@ -1,10 +1,46 @@
 "use client"
 import AdminOrdersCards from '@/components/AdminOrdersCards'
-import { IOrder } from '@/models/order.model'
+import { getSocket } from '@/lib/socket'
+import { IUser } from '@/models/user.model'
 import axios from 'axios'
 import { ArrowLeft } from 'lucide-react'
+import mongoose from 'mongoose'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
+
+export interface IOrder{
+    _id?:mongoose.Types.ObjectId
+    user:mongoose.Types.ObjectId
+    items:[
+        {
+            grocery:mongoose.Types.ObjectId
+            name:string
+            price:string
+            image:string
+            unit:string
+            quantity:number
+        }
+    ]
+    isPaid:boolean
+    totalAmount:number
+    paymentMethod:"cod" | "online"
+    address:{
+        fullName:string
+        mobile:string
+        city:string
+        state:string
+        division:string
+        pinCode:string
+        fullAddress:string
+        latitude:number
+        longitude:number
+    }
+    assignment?:mongoose.Types.ObjectId
+    assignedDeliveryBoy:IUser
+    status:"pending" | "out of delivery" | "delivered"
+    createdAt:Date
+    updatedAt:Date
+}
 
 function ManageOrders() {
     const router =useRouter()
@@ -19,6 +55,14 @@ function ManageOrders() {
             }
         }
         getOrders()
+    },[])
+
+    useEffect(():any=>{
+        const socket=getSocket()
+        socket.on("new-order",(newOrder)=>{
+            setOrders((prev)=>[newOrder,...prev!])
+        })
+        return ()=>socket.off("new-order")
     },[])
   return (
     <div className='min-h-screen bg-gray-100 w-full'>

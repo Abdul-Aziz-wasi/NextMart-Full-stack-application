@@ -1,16 +1,51 @@
 "use client"
-import { IOrder } from '@/models/order.model'
+import { IUser } from '@/models/user.model'
 import axios from 'axios'
-import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Phone, Truck, User } from 'lucide-react'
+import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Phone, Truck, User, UserCheck } from 'lucide-react'
+import mongoose from 'mongoose'
 import {motion} from 'motion/react'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+
+export interface IOrder{
+    _id?:mongoose.Types.ObjectId
+    user:mongoose.Types.ObjectId
+    items:[
+        {
+            grocery:mongoose.Types.ObjectId
+            name:string
+            price:string
+            image:string
+            unit:string
+            quantity:number
+        }
+    ]
+    isPaid:boolean
+    totalAmount:number
+    paymentMethod:"cod" | "online"
+    address:{
+        fullName:string
+        mobile:string
+        city:string
+        state:string
+        division:string
+        pinCode:string
+        fullAddress:string
+        latitude:number
+        longitude:number
+    }
+    assignment?:mongoose.Types.ObjectId
+    assignedDeliveryBoy:IUser
+    status:"pending" | "out of delivery" | "delivered"
+    createdAt:Date
+    updatedAt:Date
+}
 
 function AdminOrdersCards({order}:{order:IOrder}) {
 
   const statusOptions =["pending", "out of delivery"]
   const [expanded, setExpanded]=useState(false)
-  const [status, setStatus]=useState<string>(order.status)
+  const [status, setStatus]=useState<string>("pending")
 
   const updateStatus=async(orderId:string, status:string)=>{
       try {
@@ -21,6 +56,10 @@ function AdminOrdersCards({order}:{order:IOrder}) {
         console.log(error)
       }
   }
+
+  useEffect(()=>{
+    setStatus(order.status)
+  },[order])
   return (
     <motion.div
     key={order._id?.toString()}
@@ -60,6 +99,18 @@ function AdminOrdersCards({order}:{order:IOrder}) {
             <CreditCard size={16}/>
             <span>{order.paymentMethod == "cod" ? "Cash on Delivery" : "Online Payment"}</span>
           </p>
+
+          {order.assignedDeliveryBoy &&
+           <div className='mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center justify-between'>
+                <div className='flex items-center gap-3 text-sm text-gray-700'>
+                <UserCheck className='text-blue-600' size={18}/>
+                <div className='font-semibold'>
+                <p>Assigned to: <span>{order.assignedDeliveryBoy.name}</span></p>
+                <p className='text-xs text-gray-600'>📞 {order.assignedDeliveryBoy.mobile}</p>
+                </div>
+                </div>
+                <a className='bg-black text-white text-xs px-3 py-2 rounded-lg ' href={`tel:${order.assignedDeliveryBoy.mobile}`}>Call</a>
+            </div>}
         </div>
 
         <div className='flex flex-col items-start md:items-end gap-2'>
