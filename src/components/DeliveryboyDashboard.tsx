@@ -5,6 +5,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import LiveMap from './LiveMap'
+import DeliveryboyChat from './DeliveryboyChat'
 
 
 interface ILocation{
@@ -69,7 +70,7 @@ function DeliveryboyDashboard() {
 
   useEffect(()=>{
     const socket =getSocket()
- if(userData?._id) return
+ if(!userData?._id) return
         if(!navigator.geolocation) return
             const watcher =navigator.geolocation.watchPosition((position)=>{
                 const latitude = position.coords.latitude
@@ -121,6 +122,16 @@ function DeliveryboyDashboard() {
   fetchCurrentOrder()
 }, [userData])
 
+useEffect(():any=>{
+  const socket =getSocket()
+  socket.on("update-deliveryBoy-location",({userId,location})=>{
+    setDeliveryBoyLocation({
+      latitude:location.coordinates[1],
+      longitude:location.coordinates[0]
+    })
+  })
+  return ()=>socket.off("update-deliveryBoy-location")
+})
 if(activeOrder && orderLocation){
   return (
     <div className='p-4 pt-30 min-h-screen bg-gray-50'>
@@ -131,6 +142,7 @@ if(activeOrder && orderLocation){
         <div className='rounded-xl border shadow-lg overflow-hidden mb-6'>
           <LiveMap orderLocation={orderLocation} deliveryBoyLocation={deliveryBoyLocation}/>
         </div>
+        <DeliveryboyChat orderId={activeOrder.order._id} deliveryBoyId={userData?._id!}/>
 
       </div>
 
@@ -142,8 +154,8 @@ if(activeOrder && orderLocation){
     <div className='w-full min-h-screen bg-gray-50 p-4'>
       <div className='max-w-3xl mx-auto'>
         <h2 className='text-2xl font-bold mt-25 mb-4'>Delivery Assignment</h2>
-            {assignments.map(assignment=>(
-              <div key={assignment._id} className='p-5 bg-white rounded-xl shadow mb-4 border'>
+            {assignments.map((assignment,index)=>(
+              <div key={index} className='p-5 bg-white rounded-xl shadow mb-4 border'>
                 <p className='text-black'><b>Order Id:</b> #{assignment?.order?._id.slice(-6)}</p>
                 <p className=''>{assignment.order.address.fullAddress}</p>
 

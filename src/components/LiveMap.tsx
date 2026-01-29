@@ -59,7 +59,10 @@ function LiveMap({orderLocation,deliveryBoyLocation}:IProp) {
                                     <Popup>Delivery address</Popup>
                                 </Marker>
 
-                                {deliveryBoyLocation && <Marker position={[orderLocation.latitude,orderLocation.longitude]} icon={deliveryBoyIcon}><Popup>Delivery boy</Popup></Marker>}
+                                {deliveryBoyLocation && 
+                                
+                                <Marker position={[ deliveryBoyLocation.latitude, deliveryBoyLocation.longitude]} icon={deliveryBoyIcon}><Popup>Delivery boy</Popup>
+                                </Marker>}
 
                                 <Polyline positions={linePositions as any}/>
                                       
