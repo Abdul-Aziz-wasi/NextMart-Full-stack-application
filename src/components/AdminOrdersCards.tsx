@@ -1,4 +1,5 @@
 "use client"
+import { getSocket } from '@/lib/socket'
 import { IUser } from '@/models/user.model'
 import axios from 'axios'
 import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Phone, Truck, User, UserCheck } from 'lucide-react'
@@ -60,6 +61,16 @@ function AdminOrdersCards({order}:{order:IOrder}) {
   useEffect(()=>{
     setStatus(order.status)
   },[order])
+
+     useEffect(():any=>{
+          const socket =getSocket()
+          socket.on("order-status-update",(data)=>{
+              if(data.orderId.toString() ==order._id?.toString()){
+                  setStatus(data.status)
+              }
+          })
+          return ()=>socket.off("order-status-update")
+      },[])
   return (
     <motion.div
     key={order._id?.toString()}
@@ -73,11 +84,14 @@ function AdminOrdersCards({order}:{order:IOrder}) {
           <Package size={20}/>
           Order#{order._id?.toString().slice(-6)}
         </p>
-        <span className={`inline-block text-xs font-semibold px-3 py-1 rounded-full border ${
+
+        {status !=="delivered" && 
+         <span className={`inline-block text-xs font-semibold px-3 py-1 rounded-full border ${
           order.isPaid?"bg-green-100 text-green-700 border-green-300":"bg-red-100 text-red-700 border-red-300"
         }`}>
           {order.isPaid?"Paid":"Unpaid"}
-        </span>
+        </span>}
+       
         <p className='text-sm'>{new Date(order.createdAt!).toLocaleString()}</p>
         <div className='mt-3 space-y-1 text-sm'>
           <p className='flex items-center gap-2 font-semibold'>
@@ -120,14 +134,17 @@ function AdminOrdersCards({order}:{order:IOrder}) {
             : "bg-blue-100 text-blue-700"
           }`}>{status}</span>
 
-          <select className='border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-green-400 outline-none'
+          {status !=="delivered" &&
+           <select className='border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-green-400 outline-none'
           value={status}
           onChange={(e)=>updateStatus(order._id!.toString(),e.target.value)}
           >
                 {statusOptions.map(status=>(
                   <option key={status} value={status}>{status.toUpperCase()}</option>
                 ))}
-          </select>
+          </select>}
+
+         
 
         </div>
       </div>

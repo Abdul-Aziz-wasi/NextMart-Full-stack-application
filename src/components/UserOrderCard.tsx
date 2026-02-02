@@ -84,10 +84,12 @@ function UserOrderCard({order}:{order:IOrder}) {
                 <p className='text-xs mt-1'>{new Date(order.createdAt!).toLocaleString()}</p>
             </div>
             <div className='flex flex-wrap items-center gap-2'>
-                <span className={`px-3 py-1 text-xs font-semibold rounded-full border 
+                {status !=="delivered" && 
+                 <span className={`px-3 py-1 text-xs font-semibold rounded-full border 
                     ${order.isPaid
                     ?"bg-green-100 text-green-700 border-green-300"
-                    :"bg-red-100 text-red-700 border-red-300"}`}>{order.isPaid?"paid":"unpaid"}</span>
+                    :"bg-red-100 text-red-700 border-red-300"}`}>{order.isPaid?"paid":"unpaid"}</span>}
+               
 
                     <span className={`px-3 py-1 text-xs font-semibold rounded-full border 
                     ${getStatusColor(status)}`}>
@@ -97,8 +99,7 @@ function UserOrderCard({order}:{order:IOrder}) {
             </div>
         </div>
 
-          
-
+        {status !=="delivered" && 
         <div className='p-5 space-y-4'>
             {order.paymentMethod == "cod"?   <div className='flex items-center gap-2 text-sm'>
                 <Truck size={16}/>
@@ -178,7 +179,11 @@ function UserOrderCard({order}:{order:IOrder}) {
                        <span className='font-bold'>Total: {order.totalAmount}tk</span> 
                     </div>
            </div>
-        </div>
+        </div>}
+
+          
+
+        
 
     </motion.div>
   )

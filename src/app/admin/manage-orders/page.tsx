@@ -57,12 +57,20 @@ function ManageOrders() {
         getOrders()
     },[])
 
-    useEffect(():any=>{
+    useEffect(()=>{
         const socket=getSocket()
         socket.on("new-order",(newOrder)=>{
             setOrders((prev)=>[newOrder,...prev!])
         })
-        return ()=>socket.off("new-order")
+        socket.on("order-assigned",({orderId,assignedDeliveryBoy})=>{
+                setOrders((prev)=>prev?.map((order)=>(
+                    order._id==orderId?{...order,assignedDeliveryBoy}:order
+                )))
+            })
+        return ()=>{
+            socket.off("new-order")
+            socket.off("order-assigned")
+        }
     },[])
   return (
     <div className='min-h-screen bg-gray-100 w-full'>
