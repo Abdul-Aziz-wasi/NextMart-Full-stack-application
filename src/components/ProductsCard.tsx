@@ -1,5 +1,4 @@
 "use client"
-import mongoose from 'mongoose';
 import React from 'react'
 import { motion } from 'motion/react';
 import Image from 'next/image';
@@ -9,7 +8,7 @@ import { AppDispatch, RootState } from '@/redux/store';
 import { addToCart, decreaseQuantity, increaseQuantity } from '@/redux/cartSlice';
 
 interface IProduct {
-  _id: mongoose.Types.ObjectId;
+  _id: string
   name: string;
   price: number;
   category: string;

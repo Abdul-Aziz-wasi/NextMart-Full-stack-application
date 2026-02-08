@@ -5,17 +5,13 @@ import { ArrowLeft, Building, CreditCard, Home, Loader2, LocateFixed, MapPin, Na
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import "leaflet/dist/leaflet.css"
-import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet'
-import L, { LatLngExpression } from 'leaflet'
-import axios from 'axios'
-import { OpenStreetMapProvider } from 'leaflet-geosearch'
 
-const markerIcon =new L.Icon({
-    iconUrl:"https://cdn-icons-png.flaticon.com/128/447/447031.png",
-    iconSize:[40,40],
-    iconAnchor:[20,40]
-})
+import axios from 'axios'
+import dynamic from 'next/dynamic'
+
+const CheckoutMap=dynamic(()=>import("@/components/CheckoutMap"),{ssr:false})
+
+
 
 function Checkout() {
     const router =useRouter()
@@ -39,6 +35,7 @@ function Checkout() {
 
     const handleSearchQuery =async()=>{
         setSearchLoading(true)
+        const {OpenStreetMapProvider}= await import("leaflet-geosearch")
         const provider =new OpenStreetMapProvider()
         const result = await provider.search({query: serachQuery})
         if(result){
@@ -83,25 +80,7 @@ function Checkout() {
         fetchAddress()
     }, [positions])
 
-    const DragableMarker:React.FC=()=>{
-        const map =useMap()
-
-        useEffect(()=>{
-            map.setView(positions as LatLngExpression,15,{animate:true})
-        },[positions,map])
-
-        return  <Marker icon={markerIcon}
-                                 position={positions as LatLngExpression}
-                                 draggable={true}
-                                 eventHandlers={{
-                                    dragend:(e:L.LeafletEvent)=>{
-                                        const marker = e.target as L.Marker
-                                       const {lat, lng}= marker.getLatLng()
-                                       setPositions([lat, lng])
-                                    }
-                                 }}
-                                 />
-    }
+   
 
     const handleCodOrder=async()=>{
         if(!positions){
@@ -250,14 +229,8 @@ function Checkout() {
                     </div>
 
                     <div className='relative mt-6 h-82.5 rounded-xl overflow-hidden border border-gray-200 shadow-inner'>
-                           {positions &&
-                            <MapContainer center={positions as LatLngExpression} zoom={13} scrollWheelZoom={true} className='w-full h-full'>
-                        <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                          <DragableMarker />     
-                        </MapContainer>}
+                           {positions && <CheckoutMap positions={positions} setPositions={setPositions}/>
+                           }
                         
                             <motion.button
                             whileTap={{scale:0.95}}

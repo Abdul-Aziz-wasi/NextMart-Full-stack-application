@@ -10,6 +10,8 @@ import Image from 'next/image'
 
 function ViewProduct() {
     const router=useRouter()
+    const [search, setSearch]=useState("")
+    const [fillterd, setFilltered]=useState<IProduct[]>()
     const [products, setProducts]=useState<IProduct[]>()
     const [edit,setEdit]=useState<IProduct | null>(null)
     const [previewImage, setPreviewImage]=useState<string | null>(null)
@@ -24,6 +26,7 @@ function ViewProduct() {
             try {
                 const result =await axios.get('/api/admin/get-products')
                 setProducts(result.data)
+                setFilltered(result.data)
             } catch (error) {
                 console.log(error)
             }
@@ -77,6 +80,18 @@ useEffect(()=>{
             console.log(error)
         }
     }
+
+    const handleSearch=(e:React.FormEvent)=>{
+        e.preventDefault()
+        const query =search.toLowerCase()
+
+        setFilltered(
+            products?.filter(
+                (product)=>product.name.toLowerCase().includes(query) || product.category.toLowerCase().includes(query)
+            )
+        )
+
+    }
     
   return (
     <div className='pt-4 w-[95%] md:w-[85%] mx-auto pb-20'>
@@ -97,14 +112,15 @@ useEffect(()=>{
         initial={{opacity:0, y:10}}
         animate={{opacity:1, y:0}}
         transition={{duration:0.4}}
+        onSubmit={handleSearch}
         className='flex items-center gap-3 bg-white rounded-full px-4 py-2 w-full max-w-md mx-auto shadow-md mb-6'
         >
             <Search className='text-gray-500 w-5 h-5 mr-2'/>
-            <input placeholder='Search...' type="text" className='w-full text-gray-700 outline-none placeholder-gray-400'/>
+            <input placeholder='Search...' type="text" className='w-full text-gray-700 outline-none placeholder-gray-400' value={search} onChange={(e)=>setSearch(e.target.value)}/>
         </motion.form>
 
         <div className='space-y-4'>
-            {products?.map((product,index)=>(
+            {fillterd?.map((product,index)=>(
                 <motion.div
                 key={index}
                 whileHover={{scale:1.02}}

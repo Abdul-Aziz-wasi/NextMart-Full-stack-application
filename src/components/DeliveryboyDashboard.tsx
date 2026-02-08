@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import LiveMap from './LiveMap'
 import DeliveryboyChat from './DeliveryboyChat'
 import { Loader } from 'lucide-react'
+import { Bar, BarChart, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 
 interface ILocation{
@@ -14,7 +15,7 @@ interface ILocation{
   longitude:number
 }
 
-function DeliveryboyDashboard() {
+function DeliveryboyDashboard({earning}:{earning:number}) {
   const [assignments, setAssignments]=useState<any[]>([])
   const [activeOrder, setActiveOrder] =useState<any>(null)
   const [showOtpBox, setShowOtpBox]=useState(false)
@@ -164,14 +165,53 @@ const verifyOtp =async()=>{
     setActiveOrder(null)
     setVerifyOtpLoading(false)
     await fetchCurrentOrder()
+    window.location.reload()
   } catch (error) {
     setOtpError("Invalid OTP")
     setVerifyOtpLoading(false)
   }
 }
 
+if(!activeOrder && assignments.length ==0){
+  const todayEarning=[
+    {
+      name:"Today",
+      earning,
+      deliveries:earning/40
+    }
+  ]
+  return (
+    <div className='flex items-center justify-center min-h-screen '>
+      <div className='max-w-md w-full text-center'>
+      <h2 className='text-2xl font-bold text-gray-800'>No Active Deliveries</h2>
+      <p className='text-gray-500 mb-5'>Stay online to receive new orders</p>
+
+      <div className='bg-white rounded-xl shadow-xl p-6 border'>
+        <p className='font-medium mb-2'>Your Performance</p>
+
+        <ResponsiveContainer width="100%" height={300}>
+                            <BarChart data={todayEarning}>
+                                
+                                <XAxis dataKey="name" />
+                                <YAxis/>
+                                <Tooltip />
+                                <Legend/>
+                                <Bar dataKey="earnings" name={"Earnings"} />
+                                <Bar dataKey="deliveries" name={"Deliveries"} />
+        
+                            </BarChart>
+        
+                        </ResponsiveContainer>
+                        <p className='mt-4 text-lg font-bold'>{earning || 0} Earned today</p>
+                        <button onClick={()=>window.location.reload()} className='mt-4 w-full bg-black text-white py-2 rounded-lg'>Refreash</button>
+      </div>
+      </div>
+    </div>
+  )
+}
 
 if(activeOrder && orderLocation){
+  if (!userData?._id) return null
   return (
     <div className='p-4 pt-30 min-h-screen bg-gray-50'>
       <div className='max-w-3xl mx-auto'>
@@ -181,7 +221,7 @@ if(activeOrder && orderLocation){
         <div className='rounded-xl border shadow-lg overflow-hidden mb-6'>
           <LiveMap orderLocation={orderLocation} deliveryBoyLocation={deliveryBoyLocation}/>
         </div>
-        <DeliveryboyChat orderId={activeOrder.order._id} deliveryBoyId={userData?._id!}/>
+        <DeliveryboyChat orderId={activeOrder.order._id} deliveryBoyId={userData._id.toString()!}/>
 
         <div className='mt-6 bg-white rounded-xl shadow p-6 border'>
           {!activeOrder.order.deliveryOtpVerification && !showOtpBox && (

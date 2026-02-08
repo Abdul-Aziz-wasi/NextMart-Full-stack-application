@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import mongoose from "mongoose";
 
 interface IProduct {
-  _id: mongoose.Types.ObjectId;
+  _id: string;
   name: string;
   price: number;
   category: string;
@@ -37,14 +36,14 @@ const cartSlice =createSlice({
         state.cartData.push(action.payload)
         cartSlice.caseReducers.calculateTotal(state)
        },
-       increaseQuantity:(state, action:PayloadAction<mongoose.Types.ObjectId>)=>{
+       increaseQuantity:(state, action:PayloadAction<string>)=>{
             const items =state.cartData.find(item=>item._id==action.payload)
             if(items){
                 items.quantity = items.quantity + 1;
             }
             cartSlice.caseReducers.calculateTotal(state)
        },
-       decreaseQuantity:(state, action:PayloadAction<mongoose.Types.ObjectId>)=>{
+       decreaseQuantity:(state, action:PayloadAction<string>)=>{
         const items =state.cartData.find(item=>item._id==action.payload)
 
         if(items?.quantity && items.quantity > 1){
@@ -55,7 +54,7 @@ const cartSlice =createSlice({
         }
         cartSlice.caseReducers.calculateTotal(state)
        },
-       removeFromCart:(state,action:PayloadAction<mongoose.Types.ObjectId>)=>{
+       removeFromCart:(state,action:PayloadAction<string>)=>{
         state.cartData = state.cartData.filter(item=>item._id !== action.payload)
         cartSlice.caseReducers.calculateTotal(state)
        },

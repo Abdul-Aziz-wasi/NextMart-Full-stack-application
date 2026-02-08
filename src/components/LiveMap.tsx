@@ -24,6 +24,7 @@ function Recenter({positions}:{positions:[number,number]}) {
         }
 
     },[positions,map])
+    return null
 }
 function LiveMap({orderLocation,deliveryBoyLocation}:IProp) {
     const deliveryBoyIcon =L.icon({

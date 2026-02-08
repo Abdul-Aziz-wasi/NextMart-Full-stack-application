@@ -1,17 +1,17 @@
 "use client"
 import { RootState } from '@/redux/store'
 import { Boxes, ClipboardCheck, LogOut, Menu, Package, PlusCircle, Search, ShoppingCart, User, X } from 'lucide-react'
-import mongoose from 'mongoose'
 import { AnimatePresence,motion } from 'motion/react'
 import { signOut } from 'next-auth/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useSelector } from 'react-redux'
 
 interface IUser{
-    _id?:mongoose.Types.ObjectId,
+    _id?:string
     name:string,
     email:string,
     password?:string,
@@ -28,6 +28,8 @@ function Navbar({user}:{user:IUser}) {
   const [searchOpern, setSearchOpen]=useState(false)
   const [menuOpen, setMenuOpen]=useState(false)
   const {cartData}=useSelector((state:RootState)=>state.cart)
+  const [search, setSearch]=useState("")
+  const router =useRouter()
 
   useEffect(()=>{
     const handleClickOutside=(event:MouseEvent)=>{
@@ -40,6 +42,17 @@ function Navbar({user}:{user:IUser}) {
       document.removeEventListener("mousedown", handleClickOutside)
     }
   },[])
+
+  const handleSearch=(e:FormEvent)=>{
+    e.preventDefault()
+    const query =search.trim()
+    if(!query){
+      return router.push("/")
+    }
+    router.push(`/?q=${encodeURIComponent(query)}`)
+    setSearch("")
+    setSearchOpen(false)
+  }
 
   const sideBar =menuOpen?createPortal(
     <AnimatePresence>
@@ -91,9 +104,12 @@ function Navbar({user}:{user:IUser}) {
         <Link href={"/"} className='font-extrabold text-2xl sm:text-3xl tracking-wide hover:scale-105 transition-transform'>Nextmart</Link>
 
       {/* Search Bar visible for user*/}
-      {user.role==="user" && <form className='hidden  md:flex items-center bg-white rounded-full px-4 py-2 w-1/2 max-w-lg shadow-md'>
+      {user.role==="user" && <form className='hidden  md:flex items-center bg-white rounded-full px-4 py-2 w-1/2 max-w-lg shadow-md' onSubmit={handleSearch}>
         <Search className='text-gray-500 h-5 w-5 mr-2'/>
-        <input type="text"  placeholder='Search...' className='w-full outline-none text-gray-700 ' />
+        <input type="text"  placeholder='Search...' className='w-full outline-none text-gray-700'
+        value={search}
+        onChange={(e)=>{setSearch(e.target.value)}}
+         />
         </form>}
         
 
@@ -189,8 +205,11 @@ function Navbar({user}:{user:IUser}) {
                className='fixed top-24 left-1/2 -translate-x-1/2 bg-white rounded-full px-4 py-2 w-[90%] max-w-lg shadow-md flex items-center z-50'>
                 
                 <Search className='h-5 w-5 mr-2'/>
-                <form className='grow'>
-                  <input type="text"  placeholder='Search...' className='w-full outline-none text-gray-700 ' />
+                <form className='grow' onSubmit={handleSearch}>
+                  <input type="text"  placeholder='Search...' className='w-full outline-none text-gray-700 '
+                  value={search}
+                  onChange={(e)=>{setSearch(e.target.value)}} 
+                  />
                 </form>
                  <button onClick={()=>setSearchOpen(false)}>
                     <X className='h-5 w-5'/>

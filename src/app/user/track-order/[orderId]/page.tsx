@@ -6,18 +6,17 @@ import { IUser } from '@/models/user.model'
 import { RootState } from '@/redux/store'
 import axios from 'axios'
 import { ArrowLeft, Loader, Send, Sparkle } from 'lucide-react'
-import mongoose from 'mongoose'
 import { AnimatePresence, motion } from 'motion/react'
 import { useParams, useRouter } from 'next/navigation'
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 export interface IOrder{
-    _id?:mongoose.Types.ObjectId
-    user:mongoose.Types.ObjectId
+    _id?:string
+    user:string
     items:[
         {
-            grocery:mongoose.Types.ObjectId
+            grocery:string
             name:string
             price:string
             image:string
@@ -39,7 +38,7 @@ export interface IOrder{
         latitude:number
         longitude:number
     }
-    assignment?:mongoose.Types.ObjectId
+    assignment?:string
     assignedDeliveryBoy:IUser
     status:"pending" | "out of delivery" | "delivered"
     createdAt:Date
@@ -156,7 +155,7 @@ function TrackOrder({params}:{params:{orderId:string}}) {
      const getSuggestion=async()=>{
             setLoading(true)
             try {
-                const lastMessage =messages.filter(message=>message.senderId !== userData?._id).at(-1)
+                const lastMessage =messages.filter(message=>message.senderId.toString() !== userData?._id).at(-1)
                 const result =await axios.post("/api/chat/ai-suggestions",{message:lastMessage?.text,role:"user"})
                 setSuggestions(result.data)
                 setLoading(false)
@@ -217,11 +216,11 @@ function TrackOrder({params}:{params:{orderId:string}}) {
                           animate={{opacity:1, y:0}}
                           exit={{opacity:0}}
                           transition={{duration:0.3}}
-                          className={`flex ${message.senderId===userData?._id ? 'justify-end':'justify-start' }`}
+                          className={`flex ${message.senderId.toString()===userData?._id ? 'justify-end':'justify-start' }`}
                           >
                               <div className={`px-4 psy-2 max-w-[75%] rounded-2xl shadow
                               ${
-                                  message.senderId===userData?._id
+                                  message.senderId.toString()===userData?._id
                                   ? 'bg-black text-white rounded-br-none'
                                   : 'bg-gray-200 text-black rounded-bl-none'
                               }
