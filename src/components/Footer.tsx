@@ -40,14 +40,16 @@ function Footer() {
                     <Mail size={16}/>support@nextmart.com
                 </li>
             </ul>
+
+             <div className='flex gap-4 mt-4 text-white'>
+            <Link href={"https://facebook.com"}><Facebook className='w-f h-5 ' target='_blank'/></Link>
+            <Link href={"https://instagram.com"}><Instagram className='w-f h-5'  target='_blank'/></Link>
+            <Link href={"https://twitter.com"}><Twitter className='w-f h-5'  target='_blank'/></Link>
+
+        </div>
         </div>
 
-        <div className='flex gap-4 mt-4'>
-            <Link href={"https//facebook.com"}><Facebook className='w-f h-5' target='_blank'/></Link>
-            <Link href={"https//instagram.com"}><Instagram className='w-f h-5'  target='_blank'/></Link>
-            <Link href={"https//twitter.com"}><Twitter className='w-f h-5'  target='_blank'/></Link>
-
-        </div>
+       
         </div>
 
     </motion.div>
