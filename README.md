@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+NextMart – Smart Delivery & Ordering Platform
 
-## Getting Started
+NextMart is a full-stack web application that connects customers, delivery boys, and admins in a real-time product ordering and delivery system.
+All users must create an account first by selecting a role (Customer or Delivery Boy).
+Admins manage the platform through a dedicated admin dashboard.
 
-First, run the development server:
+ Authentication & Role Selection
+Users must register and log in
+During registration, users choose one of the following roles:
+Customer
+Delivery Boy
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Access to dashboards and features is strictly role-based
+Admin accounts are pre-defined or managed separately
+Features Overview
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Customer Role
+Register and log in as Customer
+Browse and order products
+Secure online payment using Stripe
+Real-time delivery tracking
+Live chat with assigned delivery boy
+Get AI-powered chat suggestions
+Receive OTP and share it with delivery boy to confirm delivery
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+ Delivery Boy Role
+Register and log in as Delivery Boy
+View assigned deliveries
+Track customer live location
+Real-time chat with customer
+Complete delivery using OTP verification
+View total earnings and delivery history from dashboard
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+ Admin Role
+Access admin dashboard
+Manage all deliveries
+Monitor real-time delivery updates
+View all users (customers & delivery boys)
+Oversee platform activity and order status
 
-## Learn More
+ AI Chat Assistance
+AI provides smart reply suggestions during chat
+Helps improve communication between customer and delivery boy
+Integrated directly into real-time chat system
 
-To learn more about Next.js, take a look at the following resources:
+Payment System
+Secure payments using Stripe
+Orders are confirmed only after successful payment
+Payment status is tracked and stored
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+📍 Real-Time Tracking & Chat
+Live location tracking
+Real-time messaging using Socket.IO
+Instant delivery status updates
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+🧩 Tech Stack
+Frontend
+Next.js
+Tailwind CSS
+Socket.IO Client
+Stripe.js
+
+Backend
+Node.js
+Express.js
+MongoDB
+Socket.IO
+Stripe API
+AI API (Gemini / OpenAI)
+
+Authentication
+JWT / Firebase Authentication
+Role-based authorization (Customer, Delivery Boy, Admin)
+
+ Order & Delivery Flow
+
+User registers and selects a role
+Customer places an order
+Payment completed via Stripe
+Delivery boy is assigned
+Real-time tracking & chat enabled
+Customer provides OTP
+Delivery boy completes delivery
+Earnings updated in delivery boy dashboard
+
+ Dashboards
+Customer Dashboard: Orders, payments, tracking
+Delivery Boy Dashboard: Deliveries, earnings, tracking
+Admin Dashboard: Platform monitoring and management
 
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
