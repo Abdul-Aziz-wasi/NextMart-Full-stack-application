@@ -61,35 +61,35 @@ function RegisterForm({previousStep}:propType) {
           className='flex flex-col w-full max-w-sm gap-5'>
 
                 {/*Input Name */}
-            <div className='relative'>
+            {/* <div className='relative'>
                 <User className='absolute left-3 top-3.5 w-5 h-5 '/>
                 <input type="text" placeholder='Your name' className='w-full pl-10 py-3 pr-4 focus:outline-none border border-black rounded-xl'
                 onChange={(e)=>setName(e.target.value)}
                 value={name}
                 />
-            </div>
+            </div> */}
 
                 {/*Input Email */}
-            <div className='relative'>
+            {/* <div className='relative'>
                 <Mail className='absolute left-3 top-3.5 w-5 h-5 '/>
                 <input type="text" placeholder='Your Email' className='w-full pl-10 py-3 pr-4 focus:outline-none border border-black rounded-xl'
                 onChange={(e)=>setEmail(e.target.value)}
                 value={email}
                 />
-            </div>
+            </div> */}
 
                 {/*Input Password */}
-            <div className='relative'>
+            {/* <div className='relative'>
                 <Lock className='absolute left-3 top-3.5 w-5 h-5 '/>
                 <input type={showPassword?"text":"password"} placeholder='Password' className='w-full pl-10 py-3 pr-4 focus:outline-none border border-black rounded-xl'
                 onChange={(e)=>setPassword(e.target.value)}
                 value={password}
                 />
                 {showPassword?<EyeClosed onClick={(e)=>setShowPassword(false)} className='absolute right-3 top-3.5 h-5 w-5 cursor-pointer'/>:<EyeIcon onClick={(e)=>setShowPassword(true)} className='absolute right-3 top-3.5 h-5 w-5 cursor-pointer'/>}
-            </div>
+            </div> */}
 
             {/*Input Button */}
-            {
+            {/* {
                 (()=>{
                     const formValildation = name !=="" && email !=="" && password !== ""
                     return <button
@@ -106,7 +106,7 @@ function RegisterForm({previousStep}:propType) {
                 <span className='flex-1 h-px bg-gray-400'></span>
                 OR
                 <span className='flex-1 h-px bg-gray-400'></span>
-            </div>
+            </div> */}
 
             <div className='w-full flex items-center justify-center gap-3 py-3 rounded-xl font-medium border border-black hover:bg-gray-200 cursor-pointer' onClick={()=>signIn('google',{callbackUrl:"/"})}>
                 <Image alt='' src={googleImage} width={20} height={20}/>
